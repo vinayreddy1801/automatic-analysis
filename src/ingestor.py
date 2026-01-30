@@ -27,51 +27,52 @@ def stream_factory_data():
         return
     
     # Connect to Database
+    conn = None
+    cur = None
+    dry_run = False
+    
     try:
         conn = psycopg2.connect(DB_URL)
         cur = conn.cursor()
-        print("✅ Connected to Database")
+        print("✅ Connected to Supabase Database")
     except Exception as e:
-        print(f"❌ Error connecting to database: {e}")
-        print("💡 Hint: Check your DATABASE_URL in the .env file")
-        return
+        print(f"⚠️  Database connection failed (Check .env). Switching to SIMULATION MODE (Console Only).")
+        dry_run = True
 
     print("🚀 Factory Line Started: Streaming Telemetry...")
     
     try:
         for index, row in df.iterrows():
-            # NASA formatted data:
-            # Col 0: Unit ID
-            # Col 1: Time (Cycle)
-            # Col 2-4: Op settings
-            # Col 5-25: Sensor readings. 
-            # We want 'sensor_11' (Col 15 in 0-index? No, let's verify map)
-            # Standard C-MAPSS:
-            # Col 0: unit, Col 1: cycle, Col 2: op1, Col 3: op2, Col 4: op3
-            # Col 5: s1 ... Col 15: s11 ... Col 16: s12
-            
+            # NASA formatted data mapping
             unit_id = int(row[0])
             cycle_time = int(row[1])
             sensor_11_temp = float(row[15])     # Column 15 is Sensor 11
             sensor_12_pressure = float(row[16]) # Column 16 is Sensor 12
             
-            sql = """INSERT INTO optimus_test_telemetry (unit_id, cycle_time, sensor_11_temp, sensor_12_pressure) 
-                     VALUES (%s, %s, %s, %s)"""
+            if not dry_run:
+                try:
+                    sql = """INSERT INTO optimus_test_telemetry (unit_id, cycle_time, sensor_11_temp, sensor_12_pressure) 
+                             VALUES (%s, %s, %s, %s)"""
+                    cur.execute(sql, (unit_id, cycle_time, sensor_11_temp, sensor_12_pressure))
+                    conn.commit()
+                except Exception as e:
+                    print(f"❌ DB Write Error: {e}")
             
-            cur.execute(sql, (unit_id, cycle_time, sensor_11_temp, sensor_12_pressure))
-            conn.commit()
-            
+            # Print to console regardless of DB connection (The "Show")
             print(f"✅ Unit {unit_id} | Cycle {cycle_time} | Temp: {sensor_11_temp:.2f} | Pressure: {sensor_12_pressure:.2f} | Data Ingested")
-            time.sleep(1) # The "Real-Time" simulation
+            
+            # Simulate Real-Time delay
+            time.sleep(1) 
             
     except KeyboardInterrupt:
         print("\n🛑 Factory Line Stopped by User")
     except Exception as e:
         print(f"❌ Error during streaming: {e}")
     finally:
-        cur.close()
-        conn.close()
-        print("🔌 Database Connection Closed")
+        if conn:
+            cur.close()
+            conn.close()
+            print("🔌 Database Connection Closed")
 
 if __name__ == "__main__":
     stream_factory_data()
