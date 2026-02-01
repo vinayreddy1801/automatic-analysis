@@ -1,7 +1,7 @@
 pandas
 psycopg2-binary
 python-dotenv
-streamlit
+streamlit>=1.36.0
 numpy
 standard-imghdr
-altair<5
+pyarrow<15
