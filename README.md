@@ -1,19 +1,24 @@
-# 🤖 Tesla Optimus Production Line: Telemetry Streaming & Anomaly Detection
+# 🏭 Industrial IoT Event-Driven Telemetry Pipeline
+*(Formerly: Tesla Optimus Streaming Pipeline)*
 
-![Optimus Prime-Line](https://img.shields.io/badge/Tesla-Optimus-red) ![Status](https://img.shields.io/badge/Status-Operational-brightgreen) ![Python](https://img.shields.io/badge/Python-3.9%2B-blue) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-blue)
+![Status](https://img.shields.io/badge/Status-Operational-brightgreen) ![Python](https://img.shields.io/badge/Python-3.9%2B-blue) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-blue) ![CI/CD](https://img.shields.io/badge/GitHub-Actions-orange)
 
 ## 📌 Project Overview
-This project simulates the **high-frequency sensor environment** of Tesla's Optimus Bot production line. It acts as a **Digital Twin** pipeline that:
-1.  **Ingests** raw telemetry from "Dyno Testers" (using NASA C-MAPSS Turbofan data as a proxy).
-2.  **Streams** data in real-time (1Hz) to a **scalable PostgreSQL** store (Supabase).
-3.  **Monitors** for critical failures (e.g., Motor Temp > 500°C) using a "Sentinel" service.
-4.  **Visualizes** yield and latency metrics.
+This project is a **scalable, event-driven data pipeline** designed to bridge the gap between manufacturing hardware (PLCs, Dyno Testers) and real-time operational analytics. 
 
-**Key Tech Stack:** Python (PLC Simulation), PostgreSQL (Wide-Column Store), GitHub Actions (CI/CD), Looker Studio.
+It simulates a **high-frequency telemetry environment** typical of mass-production robotics (e.g., Tesla Optimus, Autonomous Units), focusing on **fault tolerance**, **sub-second latency**, and **infrastructure health monitoring**.
 
-### **Included Proofs**
-*   **DevOps:** [Hourly Sentinel Workflow](.github/workflows/sentinel.yml)
-*   **Optimization:** [EXPLAIN ANALYZE Results](optimization_proof.sql)
+**Core Capabilities:**
+1.  **Event-Driven Ingestion:** Ingests 1Hz telemetry from simulated Dyno Testers (using NASA C-MAPSS data proxy).
+2.  **Scalable Storage:** Utilizes a wide-column PostgreSQL schema optimized for heavy write loads.
+3.  **Infrastructure Health:** "Sentinel" service ($monitor.py$) provides automated alerting for thermal runaway and pressure anomalies.
+4.  **Real-Time Visualization:** Streamlit dashboard acting as a "Manufacturing Command Center" for immediate floor feedback.
+
+**Tech Stack:** 
+*   **Pipeline:** Python (Async/Event Loop simulation), Pandas.
+*   **Database:** PostgreSQL (Supabase) with B-Tree Indexing.
+*   **DevOps:** GitHub Actions for automated health checks (CI/CD).
+*   **Visualization:** Streamlit (Real-time polling).
 
 ---
 
@@ -21,40 +26,32 @@ This project simulates the **high-frequency sensor environment** of Tesla's Opti
 
 ```mermaid
 flowchart LR
-    NASA[("NASA C-MAPSS Data")] --> Ingestor["PLC Simulator\n(ingestor.py)"]
-    Ingestor -->|Stream 1Hz| DB[("Supabase DB\n(PostgreSQL)")]
-    Sentinel["Sentinel Monitor\n(monitor.py)"] <-->|Analyze| DB
-    Sentinel -->|Trigger| Alerts["Production Alerts"]
-    DB -->|Visuals| Dashboard["Looker Studio"]
+    Source[("Dyno Testers / PLCs\n(Simulated Hardware)")] -->|Stream 1Hz| Ingestor["Telemetry Ingestor\n(src/ingestor.py)"]
+    Ingestor -->|Event Data| DB[("Production DB\n(PostgreSQL)")]
+    Sentinel["Infrastructure Health Monitor\n(src/monitor.py)"] <-->|Audit & Alert| DB
+    Sentinel -->|Trigger| Logs["System Logs / Alerts"]
+    DB -->|Read <200ms| Dashboard["Manufacturing Command Center\n(Streamlit)"]
 ```
 
 ---
 
-## 🌟 The STAR Method (Situation, Task, Action, Result)
+## 🚀 Key Engineering Features (JD Alignment)
 
-### **Situation**
-In a high-throughput manufacturing environment like Tesla’s Gigafactory, thousands of **Optimus Bots** undergo rigorous "Dyno Testing" simultaneously. A single undetected motor failure during testing can lead to costly rework or field failures. Existing batch-processing tools were too slow to catch these issues in real-time.
+### 1. "Build scalable and reliable data pipelines"
+*   **Implementation:** The `ingestor.py` script mimics a non-blocking PLC interface, capable of streaming continuous 1Hz data from multiple "Dyno" units simultaneously without data loss.
+*   **Reliability:** Implemented a **"Dry Run / Mock Mode"** fallback. If the database connection drops (network partition), the pipeline automatically switches to local logging to preserve visibility (Fault Tolerance).
 
-### **Task**
-My goal was to build a **Real-Time Telemetry Pipeline** capable of:
-1.  Ingesting high-frequency sensor data (21 sensors @ 1Hz).
-2.  Detecting thermal runaway anomalies instantly.
-3.  Maintaining sub-second query latency for production dashboards.
+### 2. "Monitor and maintain infrastructure health"
+*   **Implementation:** The `monitor.py` Sentinel operates as an independent microservice.
+*   **Automation:** Integrated with **GitHub Actions** (`.github/workflows/sentinel.yml`) to run hourly recurring health checks on the production database, ensuring data integrity 24/7.
 
-### **Action**
-*   **Engineered a "PLC Interface"**: Built a Python ingestion script (`ingestor.py`) that simulates live sensor feeds using the NASA C-MAPSS dataset.
-*   **Optimized Database Schema**: Designed a "Wide Table" schema in PostgreSQL with compound B-Tree indexes (`unit_id`, `cycle_time DESC`) to handle high-write throughput and rapid retrieval.
-*   **Implemented "Sentinel" Monitoring**: Deployed a `monitor.py` service that runs periodic health checks, flagging units exceeding strict thermal thresholds (>500 units).
-*   **Automated with CI/CD**: Configured GitHub Actions to run the Sentinel checks hourly, ensuring 24/7 reliability.
-
-### **Result**
-*   **Latency Reduced**: Achieved **<200ms** latency from data generation to dashboard availability.
-*   **Scalability**: The wide-table design supports scaling to millions of rows without degradation using `EXPLAIN ANALYZE` verified queries.
-*   **Reliability**: Automated alerting successfully catches simulated anomalies, preventing "defective bots" from moving down the line.
+### 3. "Query and programming best practices"
+*   **Implementation:** Designed a database schema (`sql/schema.sql`) specifically for time-series efficiency.
+*   **Optimization:** Utilized **Compound Indexes** (`unit_id`, `cycle_time DESC`) to ensure the "Latest Telemetry" dashboard queries run in **O(log n)** time, keeping dashboard latency low even as data grows to millions of rows.
 
 ---
 
-## 🚀 Getting Started
+## 🛠️ Getting Started
 
 ### Prerequisites
 *   Python 3.8+
@@ -63,7 +60,7 @@ My goal was to build a **Real-Time Telemetry Pipeline** capable of:
 ### 1. Setup Environment
 ```bash
 # Clone and enter repo
-git clone https://github.com/yourusername/Tesla_Optimus_Streaming_Pipeline.git
+git clone https://github.com/vinayreddy1801/automatic-analysis.git
 cd Tesla_Optimus_Streaming_Pipeline
 
 # Create Virtual Env
@@ -74,29 +71,18 @@ source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. Configure Database
+### 2. Configure Piping
 Create a `.env` file based on `.env.example` and add your connection string:
 ```bash
 DATABASE_URL=postgresql://user:pass@host:5432/db
 ```
 
-Initialize the database schema:
+### 3. Run the Pipeline
 ```bash
-# Run the SQL commands in sql/schema.sql via your SQL editor or psql
-```
-
-### 3. Run the PLC Simulator
-Start the real-time data stream:
-```bash
+# Start the Dyno/PLC Simulator
 python src/ingestor.py
 ```
 *Output: `🚀 Factory Line Started: Streaming Telemetry...`*
-
-### 4. Run the Sentinel Monitor
-Check for system health:
-```bash
-python src/monitor.py
-```
 
 ---
 
@@ -109,4 +95,4 @@ CREATE INDEX idx_unit_cycle ON optimus_test_telemetry(unit_id, cycle_time DESC);
 *Impact: reduced query cost for "Latest Cycle" lookups by ~95% during testing.*
 
 ---
-*Built for the Tesla Data Engineering Immersive.*
+*Key Project for Manufacturing Data Engineering Portfolio.*

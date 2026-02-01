@@ -15,12 +15,12 @@ load_dotenv()
 
 # Page Config
 st.set_page_config(
-    page_title="Tesla Optimus Prime-Line",
-    page_icon="🤖",
+    page_title="Industrial Manufacturing Intelligence",
+    page_icon="🏭",
     layout="wide",
 )
 
-st.title("🤖 Tesla Optimus Production Line: Real-Time Telemetry")
+st.title("🏭 Manufacturing Intelligence: Command Center")
 
 # Database Connection
 @st.cache_resource
@@ -39,10 +39,10 @@ def get_database_connection():
 conn = get_database_connection()
 
 # Sidebar
-st.sidebar.header("🏭 Factory Controls")
-refresh_rate = st.sidebar.slider("Refresh Rate (seconds)", 1, 60, 5)
+st.sidebar.header("⚙️ Pipeline Configuration")
+refresh_rate = st.sidebar.slider("Telemetry Refresh Rate (s)", 1, 60, 5)
 st.sidebar.markdown("---")
-st.sidebar.markdown("**Status:** " + ("🟢 Connected to Supabase" if conn else "🟡 MOCK DATA MODE (No DB)"))
+st.sidebar.markdown("**Status:** " + ("🟢 Connected to Production DB" if conn else "🟡 MOCK MODE (Simulation)"))
 
 # Data Fetching
 def fetch_data():
@@ -88,7 +88,7 @@ while True:
         high_temp_count = df[df["Motor Temp (C)"] > 500].shape[0]
         active_units = df["Unit ID"].nunique()
         
-        kpi1.metric(label="Active Optimus Units", value=active_units)
+        kpi1.metric(label="Active Dyno Units", value=active_units)
         kpi2.metric(label="Avg Motor Temp", value=f"{avg_temp:.2f} °C", delta=f"{500-avg_temp:.1f} Margin")
         kpi3.metric(label="Critical Anomalies", value=high_temp_count, delta_color="inverse")
         
