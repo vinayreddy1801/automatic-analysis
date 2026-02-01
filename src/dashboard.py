@@ -70,7 +70,7 @@ def fetch_data():
             "Cycle Time": np.random.randint(100, 500, 100),
             "Motor Temp (C)": np.random.normal(480, 15, 100),
             "Hydraulic Pressure": np.random.normal(520, 10, 100),
-            "Timestamp": pd.date_range(end=pd.Timestamp.now(), periods=100, freq='S')
+            "Timestamp": pd.date_range(end=pd.Timestamp.now(), periods=100, freq='1s')
         }
         return pd.DataFrame(data)
 
