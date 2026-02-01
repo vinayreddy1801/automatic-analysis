@@ -101,7 +101,12 @@ while True:
             
         with col2:
             st.subheader("⚠️ Anomaly Scatter Plot")
-            st.scatter_chart(df, x="Cycle Time", y="Motor Temp (C)", color="Unit ID")
+            try:
+                # Convert Unit ID to string for discrete color mapping
+                df["Unit ID"] = df["Unit ID"].astype(str)
+                st.scatter_chart(df, x="Cycle Time", y="Motor Temp (C)", color="Unit ID")
+            except Exception as e:
+                st.warning(f"Chart unavailable: {e}")
             
         # Raw Data
         st.subheader("📋 Raw Telemetry Stream")
