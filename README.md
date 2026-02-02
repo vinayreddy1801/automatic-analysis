@@ -44,9 +44,9 @@ flowchart LR
 
 ### 2. "Monitor and maintain infrastructure health"
 *   **Implementation:** The `monitor.py` Sentinel operates as an independent microservice.
-46: *   **Automation:** Integrated with **GitHub Actions** (`.github/workflows/sentinel.yml`) to run hourly recurring health checks on the production database, ensuring data integrity 24/7.
-47: 
-48:     ![CI/CD Proof](assets/cicd_proof.png)
+*   **Automation:** Integrated with **GitHub Actions** (`.github/workflows/sentinel.yml`) to run hourly recurring health checks on the production database, ensuring data integrity 24/7.
+
+    ![CI/CD Proof](assets/cicd_proof.png)
 
 ### 3. "Query and programming best practices"
 *   **Implementation:** Designed a database schema (`sql/schema.sql`) specifically for time-series efficiency.
