@@ -1,12 +1,12 @@
 # 🏭 Industrial IoT Event-Driven Telemetry Pipeline
-*(Formerly: Tesla Optimus Streaming Pipeline)*
+*(Simulated Manufacturing Telemetry Pipeline)*
 
 ![Status](https://img.shields.io/badge/Status-Operational-brightgreen) ![Python](https://img.shields.io/badge/Python-3.9%2B-blue) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-blue) ![Docker](https://img.shields.io/badge/Docker-Containerized-blue) ![CI/CD](https://img.shields.io/badge/GitHub-Actions-orange)
 
 ## 📌 Project Overview
 This project is a **scalable, event-driven data pipeline** designed to bridge the gap between manufacturing hardware (PLCs, Dyno Testers) and real-time operational analytics. 
 
-It simulates a **high-frequency telemetry environment** typical of mass-production robotics (e.g., Tesla Optimus, Autonomous Units), focusing on **fault tolerance**, **sub-second latency**, and **infrastructure health monitoring**.
+It simulates a **continuous 1Hz telemetry environment** typical of mass-production robotics (e.g., Optimus-style units), focusing on **fault tolerance**, **low-latency dashboard queries**, and **infrastructure health monitoring**.
 
 **Core Capabilities:**
 1.  **Event-Driven Ingestion:** Ingests 1Hz telemetry from simulated Dyno Testers (using NASA C-MAPSS data proxy).

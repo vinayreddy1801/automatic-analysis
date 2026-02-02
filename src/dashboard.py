@@ -119,7 +119,7 @@ while True:
         health_col1, health_col2 = st.columns([1, 2])
         
         with health_col1:
-            st.success("✅ **Pipeline Status: ACTIVE** (Latency < 200ms)")
+            st.success("✅ **Pipeline Status: ACTIVE** (Latency: Low)")
             st.info(f"📡 Ingestion Rate: ~1.0 Hz | 🛡️ Sentinel: MONITORING")
         
         with health_col2:

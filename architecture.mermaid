@@ -3,4 +3,4 @@ flowchart LR
     Ingestor -->|Event Data| DB[("Production DB\n(PostgreSQL)")]
     Sentinel["Infrastructure Health Monitor\n(src/monitor.py)"] <-->|Audit & Alert| DB
     Sentinel -->|Trigger| Logs["System Logs / Alerts"]
-    DB -->|Read <200ms| Dashboard["Manufacturing Command Center\n(Streamlit)"]
+    DB -->|Read (Optimized)| Dashboard["Manufacturing Command Center\n(Streamlit)"]
