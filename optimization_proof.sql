@@ -1,5 +1,5 @@
--- ⚡ Tesla Database Optimization Proof
--- This script demonstrates the performance gains from our composite index.
+-- ⚡ Tesla Database-- Optimization Proof: Industrial Telemetry Indexing
+-- Demonstrates O(log n) retrieval for high-frequency time-series datacomposite index.
 
 -- 1. Analyze the query WITHOUT the index (Simulated)
 -- (In a real scenario, you'd drop the index first to show the difference)

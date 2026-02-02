@@ -1,30 +1,6 @@
 flowchart LR
-    subgraph Data Source
-        NASA[("NASA C-MAPSS Data\n(train_FD001.txt)")]
-    end
-
-    subgraph Factory Edge [Factory/Edge Layer]
-        Ingestor["Simulate PLC/Dyno Stream\n(ingestor.py)"]
-        NASA --> Ingestor
-    end
-
-    subgraph Cloud [Cloud Infrastructure]
-        DB[("Supabase PostgreSQL\n(Telemetry Store)")]
-        Sentinel["Health Monitor Sentinel\n(monitor.py)"]
-        
-        Ingestor -->|High-Freq Insert (1Hz)| DB
-        Sentinel <-->|Periodic Query| DB
-    end
-
-    subgraph Outputs
-        Alerts["Alert System\n(Defect Detection)"]
-        Dashboard["Looker Studio\n(Visualizing Yield)"]
-        
-        Sentinel -->|Trigger| Alerts
-        DB -->|Query| Dashboard
-    end
-
-    style Data Source fill:#f9f,stroke:#333,stroke-width:2px
-    style Factory Edge fill:#ccf,stroke:#333,stroke-width:2px
-    style Cloud fill:#cfc,stroke:#333,stroke-width:2px
-    style Outputs fill:#ffc,stroke:#333,stroke-width:2px
+    Source[("Dyno Testers / PLCs\n(Simulated Hardware)")] -->|Stream 1Hz| Ingestor["Telemetry Ingestor\n(src/ingestor.py)"]
+    Ingestor -->|Event Data| DB[("Production DB\n(PostgreSQL)")]
+    Sentinel["Infrastructure Health Monitor\n(src/monitor.py)"] <-->|Audit & Alert| DB
+    Sentinel -->|Trigger| Logs["System Logs / Alerts"]
+    DB -->|Read <200ms| Dashboard["Manufacturing Command Center\n(Streamlit)"]
