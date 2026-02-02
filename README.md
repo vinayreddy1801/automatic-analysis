@@ -13,6 +13,7 @@ It simulates a **high-frequency telemetry environment** typical of mass-producti
 2.  **Scalable Storage:** Utilizes a wide-column PostgreSQL schema optimized for heavy write loads.
 3.  **Infrastructure Health:** "Sentinel" service ($monitor.py$) provides automated alerting for thermal runaway and pressure anomalies.
 4.  **Real-Time Visualization:** Streamlit dashboard acting as a "Manufacturing Command Center" for immediate floor feedback.
+5.  **First Pass Yield (FPY):** Digital Test Stand logic determines pass/fail rates in real-time based on strict sensor thresholds.
 
 **Tech Stack:** 
 *   **Pipeline:** Python (Async/Event Loop simulation), Pandas.
@@ -60,8 +61,8 @@ flowchart LR
 ### 1. Setup Environment
 ```bash
 # Clone and enter repo
-git clone https://github.com/vinayreddy1801/automatic-analysis.git
-cd Tesla_Optimus_Streaming_Pipeline
+git clone https://github.com/vinayreddy1801/manufacturing-telemetry-pipeline.git
+cd manufacturing-telemetry-pipeline
 
 # Create Virtual Env
 python -m venv .venv
