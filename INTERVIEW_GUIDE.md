@@ -71,4 +71,20 @@ Use these stories when asked: *"Tell me about a time you built a scalable pipeli
 *   "How do you handle 'Data Backpressure' from the PLCs when the cloud uplink is flaky? Do you buffer locally on the edge?"
 
 ---
+---
+
+## 🏆 The "Optimus Golden Rules" (Critical Talking Points)
+
+When you get the call, remember these three Core Philosophies. This is how you sell the vision:
+
+1.  **"Reliability over Features"**
+    *   *Say this:* "In a factory, data silence is just as dangerous as a broken machine. That's why I prioritized building self-healing 'Mock Modes' and automated retries over fancy UI features."
+
+2.  **"The Hardware-Software Bridge"**
+    *   *Say this:* "I treated this dataset not as a CSV, but as a live, noisy signal from a Dyno Tester. I had to account for real-world issues like latency and dropped packets."
+
+3.  **"Query Optimization for Scale"**
+    *   *Say this:* "I indexed `unit_id` and `timestamp` because I know that as production ramps to thousands of units per week, linear scans become impossible. My schema is O(log n) by design."
+
+---
 *Good Luck! You are speaking their language now: Availability, Latency, Throughput, and Health.*

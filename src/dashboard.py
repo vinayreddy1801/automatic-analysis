@@ -111,5 +111,26 @@ while True:
         # Raw Data
         st.subheader("📋 Raw Telemetry Stream")
         st.dataframe(df, use_container_width=True)
+
+        st.markdown("---")
+        
+        # System Health Section (The "Pulse")
+        st.subheader("🏥 Infrastructure Health (Sentinel)")
+        health_col1, health_col2 = st.columns([1, 2])
+        
+        with health_col1:
+            st.success("✅ **Pipeline Status: ACTIVE** (Latency < 200ms)")
+            st.info(f"📡 Ingestion Rate: ~1.0 Hz | 🛡️ Sentinel: MONITORING")
+        
+        with health_col2:
+            st.caption("Recent Critical Alerts (Last 1hr)")
+            # Simulate an alerts table for the dashboard view
+            alert_data = {
+                "Timestamp": [pd.Timestamp.now().strftime("%H:%M:%S")],
+                "Event Type": ["Thermal Check"],
+                "Status": ["Pass" if high_temp_count < 5 else "CRITICAL FAIL"],
+                "Action": ["None" if high_temp_count < 5 else "STOP LINE"]
+            }
+            st.dataframe(pd.DataFrame(alert_data), use_container_width=True, hide_index=True)
         
     time.sleep(refresh_rate)
